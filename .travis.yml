@@ -8,7 +8,7 @@ env:
   global:
     - CORDOVA_PLATFORM=browser
     - NODE_VERSION=10
-    - CORDOVA_VERSION=8
+    - CORDOVA_VERSION=9
     - ANGULAR_CLI_VERSION=8
     - IONIC_VERSION=6
     - ANDROID_API_LEVEL=28
@@ -90,7 +90,7 @@ matrix:
         #- sudo gem install bundler
         #- sudo gem install xcpretty --no-rdoc --no-ri --no-document --quiet
         #- sudo gem install xcpretty-travis-formatter --no-rdoc --no-ri --no-document --quiet
-        #- sudo gem install cocoapods --pre # Since Travis is not always on latest version
+        - sudo gem install cocoapods --pre # Since Travis is not always on latest version
       cache:
         directories:
           - node_modules
@@ -109,13 +109,15 @@ script:
   - export REPO_SLUG=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_REPO_SLUG; else echo $TRAVIS_PULL_REQUEST_SLUG; fi)
   # Lint and Build plugin
   - "gulp"
-  # Test Plugin platform build with ionic
-  - "ionic start myApp blank; cd myApp;"
-  - "ionic cordova platform add $CORDOVA_PLATFORM@latest --verbose"
-  - "ionic cordova plugin add https://github.com/$REPO_SLUG.git#$BRANCH --verbose"
-  - "ionic cordova build $CORDOVA_PLATFORM --verbose"
   # Test Plugin platform build with cordova only
-  - "cordova create myApp org.apache.cordova.myApp myApp; cd myApp;"
+  - "cordova create myApp-cordova org.apache.cordova.myApp myApp; cd myApp-cordova;"
   - "cordova platform add $CORDOVA_PLATFORM@latest --verbose"
   - "cordova plugin add https://github.com/$REPO_SLUG.git#$BRANCH --verbose"
   - "cordova build $CORDOVA_PLATFORM --verbose"
+  # Test Plugin platform build with ionic
+  - "ionic start myApp-ionic blank; cd myApp-ionic;"
+  - "ionic cordova platform add $CORDOVA_PLATFORM@latest --verbose"
+  - "ionic cordova plugin add https://github.com/$REPO_SLUG.git#$BRANCH --verbose"
+  # See https://ionic.zendesk.com/hc/en-us/articles/360010049673-Managing-plugins-using-CocoaPods-in-Ionic-Appflow-
+  #- "if [ "$CORDOVA_PLATFORM" == "ios" ]; then pod install --project-directory=./platforms/ios/; fi"
+  - "ionic cordova build $CORDOVA_PLATFORM --verbose"
