@@ -410,8 +410,8 @@ function TestRTCPeerConnection(localStream) {
 				return pc1.setRemoteDescription(desc);
 			})
 			.then(function () {
-				TestMediaRenderCatpure(peerVideoEl);
-				TestMediaRenderCatpure(localVideoEl);
+				TestMediaRenderCapture(peerVideoEl);
+				TestMediaRenderCapture(localVideoEl);
 				TestPeerDataChannel();
 			})
 			.catch(function (err) {
@@ -421,7 +421,7 @@ function TestRTCPeerConnection(localStream) {
 }
 
 var canvasEl;
-function TestMediaRenderCatpure(videoEl) {
+function TestMediaRenderCapture() {
 	if (!canvasEl) {
 		canvasEl = document.createElement('canvas');
 	}
@@ -442,15 +442,17 @@ function TestMediaRenderCatpure(videoEl) {
 	});
 }
 
-var testMediaRenderCatpureAnimateFrame;
-function TestMediaRenderCatpureAnimate() {
-	TestMediaRenderCatpure(peerVideoEl);
-	testMediaRenderCatpureAnimateFrame = requestAnimationFrame(TestMediaRenderCatpureAnimate);
+var testMediaRenderCaptureAnimateFrame;
+function TestMediaRenderCaptureAnimate() {
+	TestMediaRenderCapture(peerVideoEl);
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	testMediaRenderCaptureAnimateFrame = requestAnimationFrame(TestMediaRenderCaptureAnimate);
 }
 
 // Disabled to avoid confusion with remoteStream
 var cloneStream;
 var cloneVideoEl;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function TestPluginMediaStreamClone(mediaStream) {
 	cloneVideoEl = document.createElement('video');
 	cloneVideoEl.setAttribute('autoplay', 'autoplay');
